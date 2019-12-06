@@ -1,12 +1,17 @@
 package com.jihaoxian.study.chapter1json;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.databind.node.TextNode;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.Map;
 
 /**
  * @author aiter(aiter2006 @ gmail.com)
@@ -77,5 +82,36 @@ public class JacksonTests {
         myValue.name = "aiter";
         myValue.age = 19;
         mapper.writeValue(new File("data.json"), myValue);
+    }
+
+    @Test
+    public void testMap() throws Exception {
+        Map<String, Object> scoreByName = mapper.readValue(new File("data.json"), Map.class);
+
+        for(Map.Entry<String, Object> entry : scoreByName.entrySet()) {
+            System.out.println(entry);
+        }
+
+        //Map<String, MyValue> results = mapper.readValue(jsonSource,
+        //    new TypeReference<Map<String, MyValue>>() { } );
+    }
+
+    @Test
+    public void testNodeTree() throws Exception {
+        //JsonNode root = mapper.readTree(new File("data.json"));
+        //
+        ObjectNode root = (ObjectNode)mapper.readTree(new File("data.json"));
+        String name = root.get("name").asText();
+        int age = root.get("age").asInt();
+
+        Assert.assertEquals(age, 19);
+        Assert.assertEquals(name, "aiter");
+
+
+        // ObjectNode.with存在 other, 必须是ObjectNode，否则抛异常
+        // 不存在，就创建ObjectNode
+        root.with("other").put("type", "student");
+
+        System.out.println(root);
     }
 }
