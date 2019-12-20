@@ -46,5 +46,22 @@ public class MainTest {
         for(String tag: srcItem2.getTags()) {
             System.out.println(tag);
         }
+
+        /**
+         * final字段不能clone
+         */
+
+        ItemFinalField itemFinalField = new ItemFinalField();
+        itemFinalField.setName("name-final");
+
+        try {
+            ItemFinalField cloneItem3 = itemFinalField.clone();
+
+
+            System.out.println(itemFinalField);
+            System.out.println(cloneItem3);
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
     }
 }
